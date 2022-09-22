@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.useResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
@@ -18,13 +19,15 @@ import androidx.compose.ui.window.application
 @Preview
 fun App() {
     var nextLeadName by remember { mutableStateOf("The next lead is...") }
-    val listDevs = listOf(
-        Dev("a"),
-        Dev("b"),
-        Dev("c"),
-        Dev("d"),
-    )
-    var devs by remember { mutableStateOf(listDevs) }
+
+    val textJson = useResource("devs.json") { stream ->
+        stream.bufferedReader().use { it.readText() }
+    }
+
+    val listDevs = Shapp.fromJson(textJson)
+
+
+    var devs by remember { mutableStateOf(listDevs.toList()) }
 
     val listState = rememberLazyListState()
 
